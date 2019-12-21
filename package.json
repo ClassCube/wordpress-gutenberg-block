@@ -1,0 +1,19 @@
+{
+  "name": "mathjax-block",
+  "version": "0.0.1",
+  "description": "WordPress Gutenberg block for inserting MathJax equations",
+  "main": "Gruntfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ryan Nutt",
+  "license": "GPL-3.0-or-later",
+  "dependencies": {
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-sass": "^1.0.0",
+    "grunt-contrib-uglify": "^4.0.1",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-notify": "^0.4.5",
+    "grunt-wp-i18n": "^1.0.3"
+  }
+}

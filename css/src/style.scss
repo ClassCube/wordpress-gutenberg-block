@@ -1,0 +1,20 @@
+/**
+ * Base SASS file for MathJax Gutenberg block plugin
+ */
+
+ div {
+  [data-type="classcube/mathjax-block"] {
+    &.is-selected, 
+    &.is-typing {
+      div[contentEditable] {
+        display: block;
+      }
+    }
+    div[contentEditable] {
+      display:none;
+      width: 100%;
+      font-family: monospace;
+      font-size: 110%;
+    }
+  }
+}
