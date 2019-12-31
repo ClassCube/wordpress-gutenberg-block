@@ -137,6 +137,16 @@ module.exports = function (grunt) {
         metadata: '',
         regExp: false
       }
+    },
+    replace: {
+      plugin_php: {
+        src: ['mathjax-block.php'],
+        overwrite: true,
+        replacements: [{
+            from: /Version:\s*(.*)/,
+            to: "Version:           <%= pkg.version %>"
+          }]
+      }
     }
   });
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -146,6 +156,7 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-wp-i18n');
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-bump');
+  grunt.loadNpmTasks('grunt-text-replace');
   grunt.registerTask('default', ['concat', 'uglify', 'watch', 'notify:done']);
   grunt.registerTask('watchJS', ['watch']);
   grunt.registerTask('lang', ['addtextdomain', 'makepot']);
@@ -160,7 +171,10 @@ module.exports = function (grunt) {
       grunt.log.writeln('grunt version - updates patch version\ngrunt version:patch - updates patch version\ngrunt version:minor - updates to next minor version\ngrunt version:major - updates to next major version\n\n');
       return;
     }
+    grunt.task.run(['lang', 'bump:' + step, 'readpkg', 'replace:plugin_php']);
+  });
 
-    grunt.task.run(['bump:' + step]);
+  grunt.registerTask('readpkg', 'Read in the package.json file', function () {
+    grunt.config.set('pkg', grunt.file.readJSON('./package.json'));
   });
 };
