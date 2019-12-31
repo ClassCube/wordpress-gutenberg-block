@@ -118,6 +118,25 @@ module.exports = function (grunt) {
           'css/dist/<%= opts.cssName %>.min.css': 'css/src/<%= opts.cssName %>.scss'
         }
       }
+    },
+    bump: {
+      options: {
+        files: ['package.json'],
+        updateConfigs: [],
+        commit: false,
+        commitMessage: 'Release v%VERSION%',
+        commitFiles: ['package.json'],
+        createTag: false,
+        tagName: 'v%VERSION%',
+        tagMessage: 'Version %VERSION%',
+        push: false,
+        pushTo: 'upstream',
+        gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+        globalReplace: false,
+        prereleaseName: false,
+        metadata: '',
+        regExp: false
+      }
     }
   });
   grunt.loadNpmTasks('grunt-contrib-concat');
@@ -126,7 +145,22 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-notify');
   grunt.loadNpmTasks('grunt-wp-i18n');
   grunt.loadNpmTasks('grunt-contrib-sass');
+  grunt.loadNpmTasks('grunt-bump');
   grunt.registerTask('default', ['concat', 'uglify', 'watch', 'notify:done']);
   grunt.registerTask('watchJS', ['watch']);
   grunt.registerTask('lang', ['addtextdomain', 'makepot']);
+
+  grunt.registerTask('version', 'Updates version for the plugin', function (step) {
+    if (step === undefined) {
+      step = 'patch';
+    }
+    if (!['patch', 'minor', 'major'].includes(step)) {
+      grunt.log.writeln('Invalid step for version upgrade:' + step);
+      grunt.log.writeln('\n');
+      grunt.log.writeln('grunt version - updates patch version\ngrunt version:patch - updates patch version\ngrunt version:minor - updates to next minor version\ngrunt version:major - updates to next major version\n\n');
+      return;
+    }
+
+    grunt.task.run(['bump:' + step]);
+  });
 };

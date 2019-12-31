@@ -6,13 +6,7 @@
   var __ = wp.i18n.__;
   var createElement = wp.element.createElement;
   var registerBlockType = wp.blocks.registerBlockType;
-  var InspectorControls = wp.blocks.InspectorControls;
-  var ToggleControl = wp.blocks.ToggleControl;
-  var BlockControls = wp.blocks.BlockControls;
-
-  var ed = [];
-
-
+ 
 
   /**
    * Register block
@@ -31,7 +25,8 @@
             description: __('Insert math equations into your posts using MathJax', 'classcube-mathjax-block'),
             attributes: {
               mathjax: {default: ''},
-              imagedata: {default: ''}
+              divContents: {default: ''},
+              imageData: {default: ''}
             },
             supports: {
               html: false,
@@ -44,8 +39,9 @@
 
               var equationEditor = el('div', {
                 contentEditable: true,
+                className: 'cc-equation-editor',
                 onInput: function (evt) {
-                  ccMathJax.pngSetDataUrl(jQuery('#block-' + props.clientId).find('div[contentEditable]').html(), jQuery('img[data-preview-id="' + props.clientId + '"]'));
+                  ccMathJax.pngSetDataUrl(jQuery('#block-' + props.clientId).find('div[contentEditable]').html(), jQuery('img[data-preview-id="' + props.clientId + '"]'), props);
                 }
               }, '');
 
@@ -54,16 +50,22 @@
               });
               var previewError = createElement('div', {
                 'data-preview-id': props.clientId,
-                style: { display: 'none'}
-              }, __('The equation is either blank or has an error', 'classcube-mathjax-block')); 
-              var previewDiv = createElement('div', {}, previewImage, previewError);
+                'data-preview': 'error',
+                style: {display: 'none'}
+              }, __('The equation is either blank or has an error', 'classcube-mathjax-block'));
+              var previewDiv = createElement('div', {
+                'data-preview-id': props.clientId,
+                'data-preview': 'wrapper',
+                className: 'cc-mathjax-preview-wrapper'
+              }, previewImage, previewError);
 
               var loaderImage = createElement('img', {
                 src: 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==',
-                onLoad: function (evt) {
+                onLoad: function (evt) {jQuery('#block-' + props.clientId).find('.cc-equation-editor').html(props.attributes.divContents); 
                   jQuery('#block-' + props.clientId).focus(function () {
                     jQuery(this).find('[contentEditable]').focus();
                   });
+                  ccMathJax.pngSetDataUrl(jQuery('#block-' + props.clientId).find('div[contentEditable]').html(), jQuery('img[data-preview-id="' + props.clientId + '"]'), props); 
                 }
               });
 

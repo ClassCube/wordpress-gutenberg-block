@@ -9,6 +9,12 @@
       div[contentEditable] {
         display: block;
       }
+      div.cc-mathjax-preview-wrapper {
+        display:none;
+      }
+    }
+    div.cc-mathjax-preview-wrapper {
+      display: block; 
     }
     div[contentEditable] {
       display:none;

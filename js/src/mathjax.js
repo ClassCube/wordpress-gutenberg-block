@@ -7,20 +7,23 @@
  * 
  * @type {}
  */
-console.info(window.MathJax);
-//window.MathJax = {
-//  jax: ["input/TeX", "output/SVG"],
-//  extensions: ["tex2jax.js", "MathMenu.js", "MathZoom.js"],
-//  showMathMenu: false,
-//  showProcessingMessages: false,
-//  messageStyle: "none",
-//  SVG: {
-//    useGlobalCache: false
-//  },
-//  TeX: {
-//    extensions: ["AMSmath.js", "AMSsymbols.js", "autoload-all.js"]
-//  }
-//};
+window.MathJax = {
+  jax: ["input/TeX", "output/SVG"],
+  extensions: ["tex2jax.js", "MathMenu.js", "MathZoom.js"],
+  showMathMenu: false,
+  showProcessingMessages: false,
+  messageStyle: "none",
+  SVG: {
+    useGlobalCache: false
+  },
+  TeX: {
+    extensions: ["AMSmath.js", "AMSsymbols.js", "autoload-all.js"]
+  },
+  tex2jax: {
+    ignoreClass: 'cc-equation-editor'
+  },
+  skipStartupTypeset: true
+};
 
 var ccMathJax = (function () {
   var oldMathJax = {};
@@ -37,22 +40,33 @@ var ccMathJax = (function () {
      * @param {element} el  Element to set PNG data url as source
      * @return {string}
      */
-    pngSetDataUrl: function (mathJax, el) {
+    pngSetDataUrl: function (mathJax, el, props) {
+      props.setAttributes({
+        divContents: mathJax
+      });
       /* Strip out HTML and put in line breaks */
       var mathJax = mathJax.trim()
-              .replace(/<br\s*\/*>/ig, '\n ')
-              .replace(/(<(p|div))/ig, '\n $1')
-              .replace(/(<([^>]+)>)/ig, "");
-
+              .replace(/<br\s*\/*>/ig, ' ')
+              .replace(/(<(p|div))/ig, ' $1')
+              .replace(/(<([^>]+)>)/ig, "")
+              .replace(/&nbsp;/ig, ' ')
+              .replace(/&amp;/ig, '&');
+      props.setAttributes({
+        mathjax: mathJax
+      });
       this.setupMathJax();
       var clientId = jQuery(el).data('previewId');
 
       this.tex2img(mathJax, function (output) {
+        props.setAttributes({
+          imageData: output
+        });
+        console.info(jQuery('div[data-preview-id="' + clientId + '"]')); 
         if (output == '' || output == 'data:,') {
           jQuery(el).hide();
-          jQuery('div[data-preview-id="' + clientId + '"]').show();
+          jQuery('div[data-preview-id="' + clientId + '"][data-preview="error"]').show();
         } else {
-          jQuery('div[data-preview-id="' + clientId + '"]').hide();
+          jQuery('div[data-preview-id="' + clientId + '"][data-preview="error"]').hide();
           jQuery(el).show();
           jQuery(el).attr('src', output);
         }
@@ -62,15 +76,10 @@ var ccMathJax = (function () {
     },
 
     tex2img: function (formula, callback) {
-      MathJax.Hub.Config({
-        SVG: {
-          useGlobalCache: false
-        }
-      });
       MathJax.Hub.Queue(function () {
         var wrapper = MathJax.HTML.Element('span', {}, formula);
         MathJax.Hub.Typeset(wrapper, function () {
-          var svg = wrapper.getElementsByTagName('svg'); 
+          var svg = wrapper.getElementsByTagName('svg');
           if (svg.length) {
             svg[0].setAttribute('xmlns', 'http://www.w3.org/2000/svg');
             var img = new Image();
@@ -85,7 +94,7 @@ var ccMathJax = (function () {
               callback(canvas.toDataURL('image/png'));
             }
           } else {
-            callback(''); 
+            callback('');
           }
 
         });

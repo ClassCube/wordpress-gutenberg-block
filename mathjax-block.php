@@ -11,7 +11,7 @@
  * Author URI:        https://classcube.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
- * Text Domain:       mathjax-block
+ * Text Domain:       classcube-mathjax-block
  */
 
 namespace ClassCube\WordPress\MathJax;
@@ -30,14 +30,15 @@ class Block {
   public static function register_block() {
     $script_name = true || defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? 'gutenberg-block.js' : 'gutenberg-block.min.js';
 
-    wp_register_script( 'classcube-mathjax', 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_SVG', [], null );
+    wp_register_script( 'classcube-mathjax', 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js', [], null );
 //    wp_register_script('classcube-mathjax', 'https://cdn.mathjax.org/mathjax/latest/MathJax.js', [], null); 
     wp_register_script(
             'classcube-mathjax-block',
             plugins_url( 'js/dist/' . $script_name, __FILE__ ),
-            [ 'jquery', 'wp-blocks', 'classcube-mathjax' ],
+            [ 'jquery', 'wp-blocks'],
             self::version()
     );
+    
 
     wp_register_style(
             'classcube-mathjax-block',
@@ -47,8 +48,9 @@ class Block {
     );
 
     register_block_type( 'classcube/mathjax-block', [
-        'editor_script' => 'classcube-mathjax-block',
-        'editor_style' => 'classcube-mathjax-block'
+        'editor_script' => ['classcube-mathjax-block', 'classcube-mathjax'],
+        'editor_style' => 'classcube-mathjax-block',
+        'render_callback' => [self::class, 'render_callback']
     ] );
   }
 
@@ -61,6 +63,15 @@ class Block {
       return false;
     }
     return $json[ 'version' ];
+  }
+  
+  public static function render_callback($props) {
+    if (strlen($props['imageData']) < 10) {
+      if (define('WP_DEBUG') && WP_DEBUG) {
+        return '<p>' . __('Image data not available for MathJax equation', 'classcube-mathjax-block') . '</p>'; 
+      }
+    }
+    return '<img src="' . $props['imageData'] . '">'; 
   }
 
 }

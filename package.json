@@ -1,6 +1,6 @@
 {
   "name": "classcube-mathjax-block",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "WordPress Gutenberg block for inserting MathJax equations",
   "main": "Gruntfile.js",
   "scripts": {
