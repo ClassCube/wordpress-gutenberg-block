@@ -4,7 +4,7 @@
  * Plugin Name:       MathJax Gutenberg Block
  * Plugin URI:        https://github.com/ClassCube/wordpress-mathjax-block
  * Description:       Embed static images from MathJax code instead of needing the MathJax JavaScript library loaded client side
- * Version:           0.0.6
+ * Version:           0.1.0
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Author:            ClassCube
