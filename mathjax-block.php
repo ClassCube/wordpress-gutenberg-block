@@ -2,13 +2,13 @@
 
 /**
  * Plugin Name:       MathJax Gutenberg Block
- * Plugin URI:        https://classcube.com
+ * Plugin URI:        https://github.com/ClassCube/wordpress-mathjax-block
  * Description:       Embed static images from MathJax code instead of needing the MathJax JavaScript library loaded client side
  * Version:           0.0.6
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Author:            ClassCube
- * Author URI:        https://classcube.com
+ * Author URI:        httpsClassCube.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       classcube-mathjax-block
@@ -25,6 +25,15 @@ class Block {
    */
   public static function init() {
     add_action( 'init', [ self::class, 'register_block' ] );
+
+
+    if ( ! class_exists( 'ClassCube\WordPress\MathJax\Smashing_Updater' ) ) {
+      include_once( plugin_dir_path( __FILE__ ) . 'smashing_updater.php' );
+    }
+    $updater = new \ClassCube\WordPress\MathJax\Smashing_Updater( __FILE__ );
+    $updater->set_username( 'classcube' );
+    $updater->set_repository( 'wordpress-mathjax-block' );
+    $updater->initialize();
   }
 
   public static function register_block() {
@@ -35,10 +44,10 @@ class Block {
     wp_register_script(
             'classcube-mathjax-block',
             plugins_url( 'js/dist/' . $script_name, __FILE__ ),
-            [ 'jquery', 'wp-blocks'],
+            [ 'jquery', 'wp-blocks' ],
             self::version()
     );
-    
+
 
     wp_register_style(
             'classcube-mathjax-block',
@@ -48,9 +57,9 @@ class Block {
     );
 
     register_block_type( 'classcube/mathjax-block', [
-        'editor_script' => ['classcube-mathjax-block', 'classcube-mathjax'],
+        'editor_script' => [ 'classcube-mathjax-block', 'classcube-mathjax' ],
         'editor_style' => 'classcube-mathjax-block',
-        'render_callback' => [self::class, 'render_callback']
+        'render_callback' => [ self::class, 'render_callback' ]
     ] );
   }
 
@@ -64,14 +73,14 @@ class Block {
     }
     return $json[ 'version' ];
   }
-  
-  public static function render_callback($props) {
-    if (strlen($props['imageData']) < 10) {
-      if (define('WP_DEBUG') && WP_DEBUG) {
-        return '<p>' . __('Image data not available for MathJax equation', 'classcube-mathjax-block') . '</p>'; 
+
+  public static function render_callback( $props ) {
+    if ( strlen( $props[ 'imageData' ] ) < 10 ) {
+      if ( define( 'WP_DEBUG' ) && WP_DEBUG ) {
+        return '<p>' . __( 'Image data not available for MathJax equation', 'classcube-mathjax-block' ) . '</p>';
       }
     }
-    return '<img src="' . $props['imageData'] . '">'; 
+    return '<img src="' . $props[ 'imageData' ] . '">';
   }
 
 }

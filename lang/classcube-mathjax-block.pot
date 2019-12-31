@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MathJax Gutenberg Block 0.0.6\n"
 "Report-Msgid-Bugs-To: https://github.com/classcube/\n"
-"POT-Creation-Date: 2019-12-31 20:04:46+00:00\n"
+"POT-Creation-Date: 2019-12-31 20:25:26+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,7 +24,7 @@ msgstr ""
 "X-Textdomain-Support: yes\n"
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
-#: mathjax-block.php:71
+#: mathjax-block.php:80
 msgid "Image data not available for MathJax equation"
 msgstr ""
 
@@ -32,8 +32,8 @@ msgstr ""
 msgid "MathJax Gutenberg Block"
 msgstr ""
 
-#. Author URI of the plugin/theme
-msgid "https://classcube.com"
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/ClassCube/wordpress-mathjax-block"
 msgstr ""
 
 #. Description of the plugin/theme
@@ -44,4 +44,8 @@ msgstr ""
 
 #. Author of the plugin/theme
 msgid "ClassCube"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "httpsClassCube.com"
 msgstr ""
