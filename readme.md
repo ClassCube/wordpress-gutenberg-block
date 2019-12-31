@@ -26,7 +26,7 @@ Since the image is sent as a Data URL visitors will need to be using at least IE
 
 ## Installation
 
-* Go to the releases page and download the most recent version
+* Go to the [releases page](https://github.com/ClassCube/wordpress-mathjax-block/releases) and download the most recent version
 * Login to your WordPress site and click on Plugins > Add New
 * Click on the `Upload Plugin` button towards the top of the page
 * Click on `Choose File` to select the file you downloaded and then click on `Install Now`
